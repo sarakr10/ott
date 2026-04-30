@@ -16,7 +16,7 @@ public class SetupActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_setup);
         TvInputManager manager = (TvInputManager) getSystemService(Context.TV_INPUT_SERVICE);
 
         List<TvInputInfo> inputs = manager.getTvInputList();
