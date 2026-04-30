@@ -1,0 +1,32 @@
+[
+  {
+    "serviceId": "ott_001",
+    "name": "Kaltura Demo 1",
+    "description": "OTT HLS test stream",
+    "streamUrl": "http://cdnapi.kaltura.com/p/1878761/sp/187876100/playManifest/entryId/1_2xvajead/flavorIds/1_tl01409m,1_kptb3ez8,1_re3akioy,1_wuylsxwp/format/applehttp/protocol/http/a.m3u8"
+  },
+  {
+    "serviceId": "ott_002",
+    "name": "Kaltura Demo 2",
+    "description": "OTT HLS test stream",
+    "streamUrl": "http://cdnbakmi.kaltura.com/p/243342/sp/24334200/playManifest/entryId/0_uka1msg4/flavorIds/1_vqhfu6uy,1_80sohj7p/format/applehttp/protocol/http/a.m3u8"
+  },
+  {
+    "serviceId": "ott_003",
+    "name": "Longtail Demo",
+    "description": "OTT HLS captions test",
+    "streamUrl": "http://playertest.longtailvideo.com/adaptive/captions/playlist.m3u8"
+  },
+  {
+    "serviceId": "ott_004",
+    "name": "Vodobox 4K",
+    "description": "OTT 4K test stream",
+    "streamUrl": "http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8"
+  },
+  {
+    "serviceId": "ott_005",
+    "name": "Uplynk Live",
+    "description": "OTT live stream",
+    "streamUrl": "https://content.uplynk.com/channel/3353345690554b0e8de31bcd6b73fc37.m3u8"
+  }
+]
