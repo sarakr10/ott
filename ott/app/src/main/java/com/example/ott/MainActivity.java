@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         installButton = findViewById(R.id.installButton);
 
         installButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, SetupActivity.class));
+            startActivity(new Intent(this, PlaybackActivity.class));
         });
 
         readChannelsFromTvProvider();

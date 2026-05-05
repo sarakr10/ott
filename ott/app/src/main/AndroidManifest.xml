@@ -31,6 +31,8 @@
             android:name=".SetupActivity"
             android:exported="true" />
 
+        <activity android:name=".PlaybackActivity"
+            android:exported="false" />
         <service
             android:name=".ottInput.OttTvInputService"
             android:permission="android.permission.BIND_TV_INPUT"
