@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:text="OTT Channel Setup"
         android:textColor="#9C0D38"
-        android:background="#A3C4BC"
         android:textSize="30sp"
         android:textStyle="bold"
         android:gravity="center"

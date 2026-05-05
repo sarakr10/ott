@@ -6,12 +6,15 @@ import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView channelsText;
+    private Button deleteChannelsButton;
+    private Button playbackButton;
     private Button installButton;
 
     @Override
@@ -21,9 +24,20 @@ public class MainActivity extends AppCompatActivity {
 
         channelsText = findViewById(R.id.ChannelsText);
         installButton = findViewById(R.id.installButton);
+        deleteChannelsButton = findViewById(R.id.deleteChannelsButton);
+        playbackButton = findViewById(R.id.playbackButton);
 
         installButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, SetupActivity.class));
+        });
+
+        playbackButton.setOnClickListener(v-> {
             startActivity(new Intent(this, PlaybackActivity.class));
+        });
+
+        deleteChannelsButton.setOnClickListener(v -> {
+            deleteChannelsFromTvProvider();
+            readChannelsFromTvProvider();
         });
 
         readChannelsFromTvProvider();
@@ -40,6 +54,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteChannelsFromTvProvider() {
+        try {
+            int deleted = getContentResolver().delete(
+                    TvContract.Channels.CONTENT_URI,
+                    null,
+                    null
+            );
+
+            Toast.makeText(
+                    this,
+                    "Obrisano kanala: " + deleted,
+                    Toast.LENGTH_SHORT
+            ).show();
+
+        } catch (Exception e) {
+            Toast.makeText(
+                    this,
+                    "Greška pri brisanju: " + e.getMessage(),
+                    Toast.LENGTH_LONG
+            ).show();
+        }
+    }
     private void readChannelsFromTvProvider() {
         StringBuilder builder = new StringBuilder();
 
