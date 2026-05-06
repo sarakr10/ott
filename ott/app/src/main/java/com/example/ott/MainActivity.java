@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 TvContract.Channels._ID,
                 TvContract.Channels.COLUMN_DISPLAY_NAME,
                 TvContract.Channels.COLUMN_INPUT_ID,
-                TvContract.Channels.COLUMN_DESCRIPTION
+                TvContract.Channels.COLUMN_DESCRIPTION,
+                TvContract.Channels.COLUMN_INTERNAL_PROVIDER_DATA
         };
 
         Cursor cursor = getContentResolver().query(
@@ -104,11 +105,20 @@ public class MainActivity extends AppCompatActivity {
             String name = cursor.getString(1);
             String inputId = cursor.getString(2);
             String description = cursor.getString(3);
-
+            String url = "";
+            try {
+                byte[] data = cursor.getBlob(4);
+                if (data != null) {
+                    url = new String(data).trim().replace("\"", "");
+                }
+            } catch (Exception e) {
+                url = "Greska pri citanju URL-a";
+            }
             builder.append("ID: ").append(id).append("\n");
             builder.append("Name: ").append(name).append("\n");
             builder.append("InputId: ").append(inputId).append("\n");
             builder.append("Description: ").append(description).append("\n");
+            builder.append("URL: ").append(url).append("\n");
             builder.append("------------------------\n");
         }
 
