@@ -3,7 +3,7 @@
     "serviceId": "ott_001",
     "name": "Kaltura Demo 1",
     "description": "OTT HLS test stream",
-    "streamUrl": "http://cdnapi.kaltura.com/p/1878761/sp/187876100/playManifest/entryId/1_2xvajead/flavorIds/1_tl01409m,1_kptb3ez8,1_re3akioy,1_wuylsxwp/format/applehttp/protocol/http/a.m3u8"
+    "streamUrl": "http://127.0.0.1:8080/proxy?url=http://cdnapi.kaltura.com/p/1878761/sp/187876100/playManifest/entryId/1_2xvajead/flavorIds/1_tl01409m,1_kptb3ez8,1_re3akioy,1_wuylsxwp/format/applehttp/protocol/http/a.m3u8"
   },
   {
     "serviceId": "ott_002",
