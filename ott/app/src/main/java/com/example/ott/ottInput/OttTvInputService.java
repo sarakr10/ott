@@ -3,13 +3,12 @@ package com.example.ott.ottInput;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.tv.TvContract;
 import android.media.tv.TvInputManager;
+import android.media.tv.TvInputService;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Surface;
-import android.media.tv.TvContract;
-import android.media.tv.TvInputService;
-import android.util.Log;
 
 import com.example.ott.common.ServiceChannel;
 
@@ -19,6 +18,7 @@ import java.util.List;
 public class OttTvInputService extends TvInputService {
 
     private static final String TAG = "OTT_TV_INPUT";
+
     @Override
     public Session onCreateSession(String inputId) {
         Log.d(TAG, "onCreateSession: " + inputId);
@@ -58,49 +58,63 @@ public class OttTvInputService extends TvInputService {
                 values
         );
 
-        Log.d("OTT", "Inserted channel: " + channel.getName());
+        Log.d(TAG, "Inserted channel: " + channel.getName());
     }
 
-    private static class OttSession extends  TvInputService.Session {
-        private final Context context;
-        private Surface surface;
-        private float volume = 1.0f;
+    private static class OttSession extends TvInputService.Session {
 
-        OttSession(Context context){
+        private final Context context;
+        private final OttClient ottClient;
+
+        private Surface surface;
+
+        OttSession(Context context) {
             super(context);
             this.context = context;
+            this.ottClient = new OttClient();
         }
 
         @Override
-        public boolean onSetSurface(Surface surface){
+        public boolean onSetSurface(Surface surface) {
             Log.d(TAG, "onSetSurface");
+
             this.surface = surface;
-            if(surface == null){
+
+            if (surface == null) {
                 Log.w(TAG, "Surface je null");
+                return true;
             }
+
+            ottClient.setSurface(surface);
             return true;
         }
 
         @Override
-        public boolean onTune(Uri channelUri){
+        public boolean onTune(Uri channelUri) {
             Log.d(TAG, "onTune: " + channelUri);
 
-            notifyVideoUnavailable(TvInputManager.VIDEO_UNAVAILABLE_REASON_TUNING);
+            notifyVideoUnavailable(
+                    TvInputManager.VIDEO_UNAVAILABLE_REASON_TUNING
+            );
 
             String streamUrl = getStreamUrlFromChannel(channelUri);
 
-            if(streamUrl == null || streamUrl.isEmpty()){
+            if (streamUrl == null || streamUrl.isEmpty()) {
                 Log.e(TAG, "Nema stream URL-a za kanal");
-                notifyVideoUnavailable(TvInputManager.VIDEO_UNAVAILABLE_REASON_UNKNOWN);
+                notifyVideoUnavailable(
+                        TvInputManager.VIDEO_UNAVAILABLE_REASON_UNKNOWN
+                );
                 return false;
             }
+
             Log.d(TAG, "Extracted stream URL: " + streamUrl);
 
             startStream(streamUrl);
+
             return true;
         }
 
-        private String getStreamUrlFromChannel(Uri channelUri){
+        private String getStreamUrlFromChannel(Uri channelUri) {
             Cursor cursor = context.getContentResolver().query(
                     channelUri,
                     new String[]{
@@ -108,11 +122,13 @@ public class OttTvInputService extends TvInputService {
                             TvContract.Channels.COLUMN_DESCRIPTION,
                             TvContract.Channels.COLUMN_INTERNAL_PROVIDER_DATA
                     },
-                    null, null, null
+                    null,
+                    null,
+                    null
             );
 
-            if(cursor == null){
-                Log.e(TAG, "Cursor je null za channel Uri: " + channelUri);
+            if (cursor == null) {
+                Log.e(TAG, "Cursor je null za channelUri: " + channelUri);
                 return null;
             }
 
@@ -139,36 +155,36 @@ public class OttTvInputService extends TvInputService {
 
             return null;
         }
-        private void startStream(String streamUrl){
-            Log.d(TAG, " startStream: " + streamUrl);
-            new Thread(() -> {
-                try {
-                    Log.d("OTT_CLIENT", "HTTP GET manifest: " + streamUrl);
-                    Thread.sleep(500);
 
-                    Log.d("OTT_CLIENT", "HTTP GET media segments");
-                    Thread.sleep(500);
+        private void startStream(String streamUrl) {
+            Log.d(TAG, "Delegating startStream to OttClient: " + streamUrl);
 
-                    Log.d("OTT_CLIENT", "Configure decoder / MediaCodec");
-                    Thread.sleep(500);
+            ottClient.startStream(
+                    context,
+                    streamUrl,
+                    surface,
+                    new OttClient.PlaybackCallback() {
+                        @Override
+                        public void onPlaybackStarted() {
+                            Log.d(TAG, "Playback started -> notifyVideoAvailable");
+                            notifyVideoAvailable();
+                        }
 
-                    Log.d("OTT_CLIENT", "Playback started");
-
-                    notifyVideoAvailable();
-
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "startStream interrupted", e);
-                    notifyVideoUnavailable(
-                            TvInputManager.VIDEO_UNAVAILABLE_REASON_UNKNOWN
-                    );
-                }
-            }).start();
-    }
+                        @Override
+                        public void onPlaybackError(int what, int extra) {
+                            Log.e(TAG, "Playback error: what=" + what + " extra=" + extra);
+                            notifyVideoUnavailable(
+                                    TvInputManager.VIDEO_UNAVAILABLE_REASON_UNKNOWN
+                            );
+                        }
+                    }
+            );
+        }
 
         @Override
         public void onSetStreamVolume(float volume) {
             Log.d(TAG, "onSetStreamVolume: " + volume);
-            this.volume = volume;
+            ottClient.setVolume(volume);
         }
 
         @Override
@@ -180,9 +196,8 @@ public class OttTvInputService extends TvInputService {
         public void onRelease() {
             Log.d(TAG, "onRelease");
 
+            ottClient.release();
             surface = null;
         }
-
     }
-
 }
