@@ -29,7 +29,7 @@ public class PlaybackActivity extends Activity{
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 surfaceReady = true;
-                String url = "http://localhost:8080/proxy?url=http://cdnbakmi.kaltura.com/p/243342/sp/24334200/playManifest/entryId/0_uka1msg4/flavorIds/1_vqhfu6uy,1_80sohj7p/format/applehttp/protocol/http/a.m3u8";
+                String url = "http://localhost:8080/proxy?url=http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8";
 
                 if (url == null || url.isEmpty()) {
                     Log.e(TAG, "Nema validnog URL-a u bazi!");

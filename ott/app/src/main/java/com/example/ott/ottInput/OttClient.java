@@ -1,5 +1,8 @@
 package com.example.ott.ottInput;
+import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.Surface;
 
 import com.example.ott.common.ServiceChannel;
 
@@ -15,10 +18,16 @@ import java.util.List;
 
 public class OttClient {
 
+    private static final String TAG = "OTTClient";
     private static final String MANIFEST_URL = "http://127.0.0.1:8000/services.json";
 
+    private MediaPlayer mediaPlayer;
+    private float volume = 1.0f;
 
-
+    public interface PlaybackCallback{
+        void onPlaybackStarted();
+        void onPLaybackError(int what, int extra);
+    }
 
     public static List<ServiceChannel> fetchServices() {
 
@@ -35,23 +44,16 @@ public class OttClient {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(conn.getInputStream())
             );
-
             StringBuilder response = new StringBuilder();
             String line;
-
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
-
             reader.close();
 
-            // Парсирање JSON-а
             JSONArray array = new JSONArray(response.toString());
-
             for (int i = 0; i < array.length(); i++) {
-
                 JSONObject obj = array.getJSONObject(i);
-
                 ServiceChannel channel = ServiceChannel.createOttChannel(
                         obj.getString("serviceId"),
                         obj.getString("name"),
@@ -69,4 +71,9 @@ public class OttClient {
 
         return channels;
     }
+
+    public void startStream(Context context, String streamUrl, Surface surface, PlaybackCallback callback){
+
+    }
+
 }
