@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,59 @@ public class MainActivity extends AppCompatActivity {
         });
 
         playbackButton.setOnClickListener(v-> {
-            startActivity(new Intent(this, PlaybackActivity.class));
+
+            Cursor cursor = getContentResolver().query(
+                    TvContract.Channels.CONTENT_URI,
+                    new String[]{
+                            TvContract.Channels._ID
+                    },
+                    null,
+                    null,
+                    null
+            );
+
+            if (cursor == null) {
+                Toast.makeText(
+                        this,
+                        "Ne mogu da pročitam kanale",
+                        Toast.LENGTH_LONG
+                ).show();
+                return;
+            }
+
+            try {
+
+                if (!cursor.moveToFirst()) {
+                    Toast.makeText(
+                            this,
+                            "Nema kanala",
+                            Toast.LENGTH_LONG
+                    ).show();
+                    return;
+                }
+
+                long channelId = cursor.getLong(0);
+
+                android.net.Uri channelUri =
+                        TvContract.buildChannelUri(channelId);
+                Log.d("MAIN", "Playback clicked, channelUri=" + channelUri);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(channelUri);
+                intent.setPackage("com.android.tv");
+                startActivity(intent);
+
+            } catch (Exception e) {
+
+                Toast.makeText(
+                        this,
+                        "Greška: " + e.getMessage(),
+                        Toast.LENGTH_LONG
+                ).show();
+
+            } finally {
+                cursor.close();
+            }
         });
 
         deleteChannelsButton.setOnClickListener(v -> {

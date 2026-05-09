@@ -15,7 +15,7 @@ import java.util.List;
 
 public class OttClient {
 
-    private static final String MANIFEST_URL = "http://127.0.0.1:8000/services.json";
+    private static final String MANIFEST_URL = "http://127.31.10.221:8000/services.json";
 
 
 

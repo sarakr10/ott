@@ -23,7 +23,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"/>
 
-    <!-- INSTALL BUTTON -->
     <Button
         android:id="@+id/installButton"
         android:layout_width="0dp"
