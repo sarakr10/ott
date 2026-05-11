@@ -168,25 +168,12 @@ public class OttTvInputService extends TvInputService {
 
                 mediaPlayer = new MediaPlayer();
 
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes.Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-                                .setUsage(AudioAttributes.USAGE_MEDIA)
-                                .build()
-                );
-
                 mediaPlayer.setOnPreparedListener(mp -> {
                     Log.d(TAG, "Prepared -> start");
                     notifyVideoAvailable();
                     mp.start();
                 });
-
-                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-                    Log.e(TAG, "MediaPlayer error: what=" + what + " extra=" + extra);
-                    releasePlayer();
-                    return true;
-                });
-
+                
                 Log.d(TAG, "Pozivam setDataSource: " + url);
 
                 mediaPlayer.setDataSource(url);

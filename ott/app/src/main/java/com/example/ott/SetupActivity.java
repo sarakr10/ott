@@ -99,47 +99,28 @@ public class SetupActivity extends Activity {
                                 );
 
                                 if (cursor == null) {
-                                    Toast.makeText(
-                                            this,
-                                            "Ne mogu da pročitam kanale",
-                                            Toast.LENGTH_LONG
-                                    ).show();
+                                    Toast.makeText(this, "Ne mogu da pročitam kanale", Toast.LENGTH_LONG).show();
                                     return;
                                 }
 
-                                try {
 
-                                    if (!cursor.moveToFirst()) {
-                                        Toast.makeText(
-                                                this,
-                                                "Nema kanala",
-                                                Toast.LENGTH_LONG
-                                        ).show();
-                                        return;
-                                    }
 
-                                    long channelId = cursor.getLong(0);
-
-                                    android.net.Uri channelUri =
-                                            TvContract.buildChannelUri(channelId);
-                                    Log.d("MAIN", "Playback clicked, channelUri=" + channelUri);
-
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setData(channelUri);
-                                    intent.setPackage("com.android.tv");
-                                    startActivity(intent);
-
-                                } catch (Exception e) {
-
-                                    Toast.makeText(
-                                            this,
-                                            "Greška: " + e.getMessage(),
-                                            Toast.LENGTH_LONG
-                                    ).show();
-
-                                } finally {
-                                    cursor.close();
+                                if (!cursor.moveToFirst()) {
+                                    Toast.makeText(this, "Nema kanala", Toast.LENGTH_LONG).show();
+                                    return;
                                 }
+
+                                long channelId = cursor.getLong(0);
+
+                                android.net.Uri channelUri = TvContract.buildChannelUri(channelId);
+                                Log.d(TAG, "Playback clicked, channelUri=" + channelUri);
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(channelUri);
+                                intent.setPackage("com.android.tv");
+                                startActivity(intent);
+
+
                             });
                         });
                     });
