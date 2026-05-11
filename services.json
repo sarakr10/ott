@@ -28,6 +28,6 @@
     "serviceId": "ott_005",
     "name": "Uplynk Live",
     "description": "OTT live stream",
-    "streamUrl": "http://127.31.10.221:8080/proxy?url=https://content.uplynk.com/channel/3353345690554b0e8de31bcd6b73fc37.m3u8"
+    "streamUrl": "http://127.31.10.221:8080/proxy?url=https%3A%2F%2Fcontent.uplynk.com%2Fchannel%2F3353345690554b0e8de31bcd6b73fc37.m3u8"
   }
 ]
